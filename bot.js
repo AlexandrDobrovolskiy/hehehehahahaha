@@ -13,6 +13,8 @@ let processedLTs = new Set(); // Храним обработанные LT
 
 const sleep = (n) => new Promise(resolve => setTimeout(resolve, n * 1000));
 
+const received = [];
+
 // Функция для получения транзакций
 async function getTransactions(address, limit = 20) {
     try {
@@ -98,6 +100,11 @@ async function sendNewTransactions(ctx) {
         if (newSwaps.length > 0) {
             for (const swap of newSwaps) {
                 console.log(`🔍 Обрабатываем транзакцию: ${swap.transaction_id}`);
+
+                if (received.includes(swap.transaction_id)) {
+                    return;
+                }
+                received.push(swap.transaction_id);
 
                 // Получаем данные по хэшу
                 const { type, value, data: eventData } = await getTransactionDetails(swap.transaction_id);
