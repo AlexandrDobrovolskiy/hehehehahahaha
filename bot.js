@@ -47,12 +47,10 @@ async function getTransactionDetails(hash) {
 
         const { symbol, decimals } = swap["jetton_master_out"];
 
-        const value = swap.amount_out * Math.pow(10, -1 * decimals);
-
         if (symbol === 'pTON' || symbol === 'TON') {
-            return { type: 'sell', value, data: response.data };
+            return { type: 'sell', value: swap.amount_in * Math.pow(10, -1 * decimals), data: response.data };
         } else if (symbol === 'PX') {
-            return { type: 'buy', value, data: response.data };
+            return { type: 'buy', value: swap.amount_out * Math.pow(10, -1 * decimals), data: response.data };
         } else {
             throw `Unknown symbol ${symbol}`;
         }
