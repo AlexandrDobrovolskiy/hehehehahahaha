@@ -49,7 +49,7 @@ async function getTransactionDetails(hash) {
 
         const value = swap.amount_out * Math.pow(10, -1 * decimals);
 
-        if (symbol === 'pTON') {
+        if (symbol === 'pTON' || symbol === 'TON') {
             console.log("PRODAJA: ", value);
         } else if (symbol === 'PX') {
             console.log("POKUPKA: ", value);
