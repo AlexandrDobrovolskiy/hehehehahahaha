@@ -11,9 +11,13 @@ const ADDRESS = 'EQCD9h3nwvP4vZYL0nx2bhlEnRaxRCjaOwKMiDwymBpZWSKi'; // Адре�
 const bot = new Telegraf(BOT_TOKEN);
 let processedLTs = new Set(); // Храним обработанные LT
 
+const sleep = (n) => new Promise(resolve => setTimeout(resolve, n * 1000));
+
 // Функция для получения транзакций
 async function getTransactions(address, limit = 20) {
     try {
+        await sleep(1);
+
         const response = await axios.get(API_URL, {
             params: {
                 address: address,
@@ -33,6 +37,26 @@ async function getTransactionDetails(hash) {
     try {
         const response = await axios.get(`${TONAPI_URL}${hash}`);
         console.log(`✅ JSON-ответ от Tonapi для хэша ${hash}:`, response.data);
+        const action = (response.data.actions || []).find(({ type }) => type === 'JettonSwap');
+
+        if (!action) {
+            throw "Action now found";
+        }
+
+        const swap = action["JettonSwap"];
+
+        const { symbol, decimals } = swap["jetton_master_out"];
+
+        const value = swap.amount_out * Math.pow(10, -1 * decimals);
+
+        if (symbol === 'pTON') {
+            console.log("PRODAJA: ", value);
+        } else if (symbol === 'PX') {
+            console.log("POKUPKA: ", value);
+        } else {
+            throw `Unknown symbol ${symbol}`;
+        }
+
         return response.data;
     } catch (error) {
         console.error(`❌ Ошибка получения данных для транзакции ${hash}:`, error.message);
