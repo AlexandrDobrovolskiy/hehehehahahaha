@@ -56,7 +56,7 @@ async function getTransactionDetails(hash) {
             throw `Unknown symbol ${symbol}`;
         }
     } catch (error) {
-        console.error(`❌ Ошибка получения данных для транзакции ${hash}:`, error.message);
+        console.error(`❌ Ошибка получения данных для транзакции ${hash}:`, error);
         return null;
     }
 }
