@@ -18,8 +18,6 @@ const received = [];
 // Функция для получения транзакций
 async function getTransactions(address, limit = 20) {
     try {
-        await sleep(1);
-
         const response = await axios.get(API_URL, {
             params: {
                 address: address,
@@ -27,6 +25,7 @@ async function getTransactions(address, limit = 20) {
                 api_key: API_KEY,
             },
         });
+        await sleep(5);
         return response.data.result;
     } catch (error) {
         console.error('❌ Ошибка получения транзакций:', error.response?.data || error.message);
