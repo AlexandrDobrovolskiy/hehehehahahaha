@@ -50,14 +50,12 @@ async function getTransactionDetails(hash) {
         const value = swap.amount_out * Math.pow(10, -1 * decimals);
 
         if (symbol === 'pTON' || symbol === 'TON') {
-            console.log("PRODAJA: ", value);
+            return { type: 'sell', value, data: response.data };
         } else if (symbol === 'PX') {
-            console.log("POKUPKA: ", value);
+            return { type: 'buy', value, data: response.data };
         } else {
             throw `Unknown symbol ${symbol}`;
         }
-
-        return response.data;
     } catch (error) {
         console.error(`❌ Ошибка получения данных для транзакции ${hash}:`, error.message);
         return null;
@@ -104,15 +102,14 @@ async function sendNewTransactions(ctx) {
                 console.log(`🔍 Обрабатываем транзакцию: ${swap.transaction_id}`);
 
                 // Получаем данные по хэшу
-                const eventData = await getTransactionDetails(swap.transaction_id);
+                const { type, value, data: eventData } = await getTransactionDetails(swap.transaction_id);
 
                 if (eventData) {
-                    const message = `✅ *Новая Swap Транзакция*  
-📌 Отдано: ${swap.from}  
-📌 Получено: ${swap.to}  
-📌 Хэш: \`${swap.transaction_id}\`  
+                    const message = `💅💅💅💅Девачбки новая транзакция💅💅💅💅
+${type === 'buy' ? '✅📈✅КУПЛЕНО' : '❌📉❌ПРОДАНО'}: ${value.toFixed(2)}PX 
 
-🛠 *Данные Tonapi:*  
+💅💅💅👨‍❤️‍👨💅💅💅
+
 \`\`\`json  
 ${JSON.stringify(eventData, null, 2)}  
 \`\`\``;
