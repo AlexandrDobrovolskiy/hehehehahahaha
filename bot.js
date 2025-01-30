@@ -109,10 +109,7 @@ async function sendNewTransactions(ctx) {
 ${type === 'buy' ? '✅📈✅КУПЛЕНО' : '❌📉❌ПРОДАНО'}: ${value.toFixed(2)}PX 
 
 💅💅💅👨‍❤️‍👨💅💅💅
-
-\`\`\`json  
-${JSON.stringify(eventData, null, 2)}  
-\`\`\``;
+`;
 
                     await ctx.replyWithMarkdown(message);
                 } else {
